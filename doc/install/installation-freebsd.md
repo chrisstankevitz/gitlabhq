@@ -182,6 +182,14 @@ Check if GitLab and its environment are configured correctly:
 ### Compile Assets
 
     rake assets:precompile RAILS_ENV=production
+    
+### Create uploads directory
+
+The uploads directory is needed in order for backups to operate properly
+
+    # Run this as the git user
+    mkdir /usr/local/www/gitlab/public/uploads
+    chmod 0700 /usr/local/www/gitlab/public/uploads
 
 ### Start Your GitLab Instance
 
