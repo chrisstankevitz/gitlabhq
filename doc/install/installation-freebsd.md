@@ -324,7 +324,13 @@ You also need to change the corresponding options (e.g. `ssh_user`, `ssh_host`, 
 
 ### LDAP Authentication
 
-You can configure LDAP authentication in `config/gitlab.yml`. Please restart GitLab after editing this file. This requires building gitlab from the ports-tree with the needed option selected.
+You can configure LDAP authentication in `config/gitlab.yml`. You will also need to fix a bug by editing the first line of the file `app/views/devise/sessions/_new_ldap.html.haml` so that it reads:
+
+    = form_tag(omniauth_callback_path(:user, server['provider_name']), id: 'new_ldap_user') do
+
+This fix is described in issue https://gitlab.com/gitlab-org/gitlab-ce/issues/22357 and is fixed by commit https://gitlab.com/onlyjob/gitlab-ce/commit/0d74154abcbdc56264b20b39ea6f3e4445c6a42c in GitLab versions 8.13 and greater.
+
+Restart GitLab after making these changes.
 
 ### Using Custom Omniauth Providers
 
