@@ -173,6 +173,18 @@ The `secrets.yml` file stores encryption keys for sessions and secure variables.
 Backup `secrets.yml` someplace safe, but don't store it in the same place as your database backups.
 Otherwise your secrets are exposed if one of your backups is compromised.
 
+### Fix Sidekiq Check
+
+The `check.rake` file uses `ps` to check whether or not Sidekiq is running; however, it does not account for column truncation. 
+
+    vi /usr/local/www/gitlab/lib/tasks/gitlab/check.rake
+    
+    # Add a 'w' to the ps arguments.  Change this line:
+    #  ps_ux, _ = Gitlab::Popen.popen(%W(ps ux))
+    # to read:
+    #  ps_ux, _ = Gitlab::Popen.popen(%W(ps wux))
+
+
 ### Check Application Status
 
 Check if GitLab and its environment are configured correctly:
@@ -189,6 +201,12 @@ Check if GitLab and its environment are configured correctly:
     service gitlab start
     # or this:
     /usr/local/etc/rc.d/gitlab restart
+
+### Check Gitlab Status
+
+    su - git
+    cd /usr/local/www/gitlab
+    bundle exec rake gitlab:check RAILS_ENV=production
 
 ## 7. Nginx
 
